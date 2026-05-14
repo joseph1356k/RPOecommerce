@@ -1,9 +1,13 @@
 "use client";
 import Image from "next/image";
 import type { Product } from "@/types";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { track } from "@/lib/tracking";
 
 interface Props {
   product: Product;
+  source?: string;
 }
 
 function StarRating({ rating = 5, count }: { rating?: number; count?: number }) {
@@ -38,14 +42,25 @@ function badgeFor(product: Product) {
   return null;
 }
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, source }: Props) {
+  const cart = useCart();
+  const wishlist = useWishlist();
   const badge = badgeFor(product);
+  const isWishlisted = wishlist.has(product.id);
 
   return (
     <a
       href={product.href}
       className="product-card"
-      style={{ display: "block", textDecoration: "none", color: "inherit" }}
+      style={{ display: "block", textDecoration: "none", color: "inherit", position: "relative" }}
+      onClick={() =>
+        track("select_item", {
+          item_id: product.id,
+          item_name: product.title,
+          item_category: product.type,
+          source: source ?? "product_card",
+        })
+      }
     >
       <div className="product-img-wrap">
         {badge && (
@@ -69,6 +84,55 @@ export default function ProductCard({ product }: Props) {
           </span>
         )}
 
+        {/* Wishlist heart */}
+        <button
+          type="button"
+          aria-label={isWishlisted ? "Quitar de favoritos" : "Guardar en favoritos"}
+          aria-pressed={isWishlisted}
+          data-event="add_to_wishlist"
+          onClick={(e) => {
+            e.preventDefault();
+            wishlist.toggle(product.id, { title: product.title });
+          }}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            zIndex: 3,
+            width: "34px",
+            height: "34px",
+            borderRadius: "50%",
+            backgroundColor: "rgba(255,255,255,0.92)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "none",
+            cursor: "pointer",
+            transition: "transform 180ms cubic-bezier(0.22,1,0.36,1), background 180ms",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "scale(1.08)";
+            e.currentTarget.style.backgroundColor = "#fff";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+            e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.92)";
+          }}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill={isWishlisted ? "#B95E3C" : "none"}
+            stroke={isWishlisted ? "#B95E3C" : "#0a0a0a"}
+            strokeWidth="2"
+            style={{ transition: "fill 220ms, stroke 220ms" }}
+          >
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
+
         <Image
           src={product.image}
           alt={product.title}
@@ -88,29 +152,34 @@ export default function ProductCard({ product }: Props) {
           />
         )}
 
-        {/* Quick add CTA appears on hover */}
+        {/* Quick add */}
         <button
           type="button"
           className="quick-add"
-          aria-label={`Vista rápida de ${product.title}`}
+          aria-label={`Agregar ${product.title} al carrito`}
+          data-event="rpo_quick_add"
           onClick={(e) => {
             e.preventDefault();
-            window.location.href = product.href;
+            cart.add(product, { color: product.colors?.[0] });
+            track("rpo_quick_add", {
+              item_id: product.id,
+              item_name: product.title,
+              source: source ?? "product_card",
+            });
           }}
           style={{
-            background: "#fff",
-            color: "#000",
+            background: "#0a0a0a",
+            color: "#fff",
             fontSize: "11.5px",
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
             padding: "12px 16px",
             borderRadius: "2px",
-            border: "1px solid #000",
             width: "100%",
           }}
         >
-          + Vista rápida
+          + Añadir al carrito
         </button>
       </div>
 
@@ -175,7 +244,7 @@ export default function ProductCard({ product }: Props) {
           </div>
         )}
 
-        {(product.rating !== undefined && product.reviewCount !== undefined) && (
+        {product.rating !== undefined && product.reviewCount !== undefined && (
           <StarRating rating={product.rating} count={product.reviewCount} />
         )}
       </div>

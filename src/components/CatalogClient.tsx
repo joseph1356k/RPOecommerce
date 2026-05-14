@@ -8,10 +8,12 @@ import {
   PRODUCT_TYPES,
   PRODUCT_COLLECTIONS,
   PRODUCT_COLORS,
+  PRODUCT_INTENTS,
   SORT_OPTIONS,
   type SortValue,
 } from "@/data/products";
-import type { ProductType, ProductCollection } from "@/types";
+import type { ProductType, ProductCollection, ProductIntent } from "@/types";
+import { track } from "@/lib/tracking";
 
 type Toggle<T extends string> = Record<T, boolean>;
 
@@ -35,6 +37,7 @@ export default function CatalogClient() {
   const [quick, setQuick] = useState<string>("all");
   const [types, setTypes] = useState<Toggle<ProductType>>({} as Toggle<ProductType>);
   const [collections, setCollections] = useState<Toggle<ProductCollection>>({} as Toggle<ProductCollection>);
+  const [intent, setIntent] = useState<ProductIntent | null>(null);
   const [colors, setColors] = useState<Record<string, boolean>>({});
   const [price, setPrice] = useState<string>("all");
   const [sort, setSort] = useState<SortValue>("recommended");
@@ -48,6 +51,8 @@ export default function CatalogClient() {
     if (tipo) setTypes({ [tipo]: true } as Toggle<ProductType>);
     const coleccion = params.get("coleccion");
     if (coleccion) setCollections({ [coleccion]: true } as Toggle<ProductCollection>);
+    const intentParam = params.get("intent") as ProductIntent | null;
+    if (intentParam) setIntent(intentParam);
     const q = params.get("quick");
     if (q) setQuick(q);
     const t = setTimeout(() => setLoading(false), 250);
@@ -71,6 +76,9 @@ export default function CatalogClient() {
     const activeCols = Object.keys(collections).filter((k) => collections[k as ProductCollection]) as ProductCollection[];
     if (activeCols.length) list = list.filter((p) => p.collection && activeCols.includes(p.collection));
 
+    // Intent (momento de uso)
+    if (intent) list = list.filter((p) => p.intent?.includes(intent));
+
     // Colors
     const activeColors = Object.keys(colors).filter((k) => colors[k]);
     if (activeColors.length) list = list.filter((p) => p.colors?.some((c) => activeColors.includes(c)));
@@ -88,21 +96,24 @@ export default function CatalogClient() {
     if (sort === "newest") list.sort((a, b) => Number(b.tags?.includes("novedad")) - Number(a.tags?.includes("novedad")));
 
     return list;
-  }, [quick, types, collections, colors, price, sort]);
+  }, [quick, types, collections, intent, colors, price, sort]);
 
   const activeCount =
     Object.values(types).filter(Boolean).length +
     Object.values(collections).filter(Boolean).length +
     Object.values(colors).filter(Boolean).length +
     (price !== "all" ? 1 : 0) +
-    (quick !== "all" ? 1 : 0);
+    (quick !== "all" ? 1 : 0) +
+    (intent ? 1 : 0);
 
   function clearAll() {
     setTypes({} as Toggle<ProductType>);
     setCollections({} as Toggle<ProductCollection>);
+    setIntent(null);
     setColors({});
     setPrice("all");
     setQuick("all");
+    track("rpo_filter_change", { action: "clear_all" });
   }
 
   return (
@@ -123,8 +134,37 @@ export default function CatalogClient() {
       </header>
 
       {/* Quick chips */}
-      <div style={{ marginBottom: "20px" }}>
-        <QuickNavChips chips={QUICK_CHIPS} active={quick} onSelect={setQuick} />
+      <div style={{ marginBottom: "12px" }}>
+        <QuickNavChips
+          chips={QUICK_CHIPS}
+          active={quick}
+          onSelect={(v) => {
+            setQuick(v);
+            track("rpo_filter_change", { filter: "quick", value: v });
+          }}
+        />
+      </div>
+
+      {/* Intent chips */}
+      <div style={{ marginBottom: "20px", display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px" }}>
+        {PRODUCT_INTENTS.map((it) => {
+          const active = intent === it.value;
+          return (
+            <button
+              key={it.value}
+              type="button"
+              className={`chip ${active ? "chip--active" : ""}`}
+              onClick={() => {
+                const next = active ? null : it.value;
+                setIntent(next);
+                track("rpo_filter_change", { filter: "intent", value: next });
+              }}
+            >
+              <span aria-hidden style={{ marginRight: "4px" }}>{it.icon}</span>
+              {it.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Toolbar (mobile filter open + sort) */}
@@ -155,7 +195,11 @@ export default function CatalogClient() {
           <span>Ordenar:</span>
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value as SortValue)}
+            onChange={(e) => {
+              const v = e.target.value as SortValue;
+              setSort(v);
+              track("rpo_sort_change", { value: v });
+            }}
             style={{
               border: "1px solid var(--color-ink-20)",
               background: "#fff",

@@ -20,12 +20,14 @@ export type ProductTag = "novedad" | "best-seller" | "oferta" | "ultimas-unidade
 
 export interface Product {
   id: string;
+  slug?: string;
   title: string;
   price: string;
   priceValue?: number;
   comparePrice?: string;
   image: string;
   imageHover?: string;
+  gallery?: string[];
   href: string;
   reviewCount?: number;
   rating?: number;
@@ -35,7 +37,11 @@ export interface Product {
   colors?: string[];
   tags?: ProductTag[];
   benefitsCopy?: string;
+  inStock?: boolean;
+  intent?: ProductIntent[];
 }
+
+export type ProductIntent = "entrenar" | "diario" | "viajar" | "comodidad" | "estilizada" | "look-completo";
 
 export interface Category {
   name: string;

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ClientProviders from "@/components/ClientProviders";
 
 export const metadata: Metadata = {
   title: "RPO | Do sport in style ✨ | Ropa deportiva para mujer",
-  description: "Nuestra ropa deportiva combina tecnología avanzada y diseño ergonómico, realzando tu figura con total comodidad durante tus entrenamientos",
+  description:
+    "Ropa deportiva diseñada en Colombia para mujeres que se mueven con intención. Tecnología, comodidad y estilo en cada prenda.",
 };
 
 export default function RootLayout({
@@ -13,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="h-full">
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      <body className="min-h-full flex flex-col antialiased">
+        <ClientProviders>{children}</ClientProviders>
+      </body>
     </html>
   );
 }

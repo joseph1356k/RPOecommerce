@@ -5,6 +5,7 @@ import CollectionSection from "@/components/CollectionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import VideoGallery from "@/components/VideoGallery";
 import CategoryGrid from "@/components/CategoryGrid";
+import ShopByIntent from "@/components/ShopByIntent";
 import MarqueeBanner from "@/components/MarqueeBanner";
 import TallaUnica from "@/components/TallaUnica";
 import RpoClub from "@/components/RpoClub";
@@ -25,38 +26,41 @@ export default function HomePage() {
       <main>
         <HeroBanner />
 
-        {/* 1. Categorías — punto de partida claro para no perderse */}
+        {/* 1. Categorías — punto de partida claro */}
         <CategoryGrid />
 
-        {/* 2. Nueva colección destacada */}
+        {/* 2. Compra por momento de uso — reduce fricción de descubrimiento */}
+        <ShopByIntent />
+
+        {/* 3. Nueva colección */}
         <CollectionSection
           eyebrow="Nueva colección"
           title="Esencia by Dany Osorno."
           lede="Una cápsula que mezcla feminidad, soporte y silueta para acompañarte de la mañana a la noche."
           products={esenciaProducts}
-          viewAllHref="/collections/esencia-by-dany-osorno"
+          viewAllHref="/catalogo?coleccion=esencia"
         />
 
-        {/* 3. Talla Única — comunicación de ajuste (genera confianza) */}
+        {/* 4. Talla Única — confianza */}
         <TallaUnica />
 
-        {/* 4. RPO Club — VIP impulsa registro y recompra */}
+        {/* 5. RPO Club — fidelización */}
         <RpoClub />
 
-        {/* 5. Best sellers / Prisma */}
+        {/* 6. Best sellers / Prisma */}
         <CollectionSection
           eyebrow="Los favoritos de la comunidad"
           title="Colección Prisma."
           lede="Diseños protagonistas para entrenar fuerte, descansar bien y verte increíble en cualquier rutina."
           products={prismaProducts}
-          viewAllHref="/collections/prisma"
+          viewAllHref="/catalogo?coleccion=prisma"
           background="soft"
         />
 
-        {/* 6. Marquee — momento de respiro entre grids */}
+        {/* 7. Marquee — respiro */}
         <MarqueeBanner />
 
-        {/* 7. Últimas unidades — urgencia */}
+        {/* 8. Últimas unidades — urgencia */}
         <CollectionSection
           eyebrow="Aprovecha mientras alcance"
           title="Últimas unidades."
@@ -66,13 +70,13 @@ export default function HomePage() {
           viewAllLabel="Ver todas las ofertas"
         />
 
-        {/* 8. Comunidad — testimonios reales */}
+        {/* 9. Comunidad */}
         <TestimonialsSection />
 
-        {/* 9. Video shoppable — al final, decora sin saturar */}
+        {/* 10. Video shoppable */}
         <VideoGallery />
 
-        {/* 10. Confianza — pagos */}
+        {/* 11. Confianza — pagos */}
         <PaymentsBanner />
       </main>
       <Footer />

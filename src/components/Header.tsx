@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 
 type NavLink = {
   label: string;
@@ -10,17 +12,17 @@ type NavLink = {
 };
 
 const NAV_LINKS: NavLink[] = [
-  { label: "Nuevo", href: "/collections/aura", highlight: true },
+  { label: "Nuevo", href: "/catalogo?quick=novedades", highlight: true },
   {
     label: "Colecciones",
     href: "#",
     children: [
-      { label: "Esencia by Dany Osorno", href: "/collections/esencia-by-dany-osorno" },
-      { label: "Aura", href: "/collections/aura" },
-      { label: "Calma", href: "/collections/calma" },
-      { label: "Pausa", href: "/collections/pausa" },
-      { label: "Esenciales", href: "/collections/esenciales" },
-      { label: "Prisma", href: "/collections/prisma" },
+      { label: "Esencia by Dany Osorno", href: "/catalogo?coleccion=esencia" },
+      { label: "Prisma", href: "/catalogo?coleccion=prisma" },
+      { label: "Aura", href: "/catalogo?coleccion=aura" },
+      { label: "Calma", href: "/catalogo?coleccion=calma" },
+      { label: "Pausa", href: "/catalogo?coleccion=pausa" },
+      { label: "Esenciales", href: "/catalogo?coleccion=esenciales" },
     ],
   },
   {
@@ -35,8 +37,18 @@ const NAV_LINKS: NavLink[] = [
       { label: "Sets", href: "/catalogo?tipo=sets" },
     ],
   },
+  {
+    label: "Por momento",
+    href: "#",
+    children: [
+      { label: "Para entrenar", href: "/catalogo?intent=entrenar" },
+      { label: "Día a día", href: "/catalogo?intent=diario" },
+      { label: "Para viajar", href: "/catalogo?intent=viajar" },
+      { label: "Comodidad", href: "/catalogo?intent=comodidad" },
+      { label: "Estilizada", href: "/catalogo?intent=estilizada" },
+    ],
+  },
   { label: "Últimas unidades", href: "/catalogo?quick=ultimas-unidades" },
-  { label: "Visítanos", href: "/pages/visitanos" },
   { label: "RPO Club", href: "/pages/rpo-club", highlight: true },
 ];
 
@@ -44,6 +56,8 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const cart = useCart();
+  const wishlist = useWishlist();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -74,7 +88,6 @@ export default function Header() {
           gap: "16px",
         }}
       >
-        {/* Mobile menu button */}
         <button
           type="button"
           className="only-mobile"
@@ -89,7 +102,6 @@ export default function Header() {
           </svg>
         </button>
 
-        {/* Logo */}
         <a href="/" style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
           <Image
             src="/images/logo-black.png"
@@ -101,8 +113,7 @@ export default function Header() {
           />
         </a>
 
-        {/* Nav (desktop) */}
-        <nav className="hide-mobile" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
+        <nav className="hide-mobile" style={{ display: "flex", alignItems: "center", gap: "24px" }}>
           {NAV_LINKS.map((link) => (
             <div
               key={link.label}
@@ -122,7 +133,6 @@ export default function Header() {
                   display: "flex",
                   alignItems: "center",
                   gap: "4px",
-                  transition: "color 180ms",
                 }}
               >
                 {link.label}
@@ -173,27 +183,48 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Icons */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
           <a href="/catalogo" aria-label="Buscar" style={{ padding: "4px", display: "inline-flex" }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
+          </a>
+          <a
+            href="/favoritos"
+            aria-label="Favoritos"
+            style={{ padding: "4px", display: "inline-flex", position: "relative" }}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill={wishlist.count > 0 ? "#B95E3C" : "none"}
+              stroke={wishlist.count > 0 ? "#B95E3C" : "currentColor"}
+              strokeWidth="2"
+            >
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            {wishlist.count > 0 && <Badge count={wishlist.count} color="#B95E3C" />}
           </a>
           <a href="/pages/cuenta" aria-label="Cuenta" className="hide-mobile" style={{ padding: "4px", display: "inline-flex" }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
             </svg>
           </a>
-          <button aria-label="Carrito" style={{ padding: "4px", position: "relative" }}>
+          <button
+            type="button"
+            aria-label={`Carrito (${cart.count})`}
+            onClick={cart.openDrawer}
+            style={{ padding: "4px", position: "relative" }}
+          >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
+            {cart.count > 0 && <Badge count={cart.count} color="#0a0a0a" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile drawer */}
       {mobileOpen && (
         <div
           role="dialog"
@@ -241,6 +272,18 @@ export default function Header() {
                   {link.label}
                 </a>
               ))}
+              <a
+                href="/favoritos"
+                style={{
+                  padding: "12px 0",
+                  fontSize: "15px",
+                  fontWeight: 700,
+                  color: "var(--color-fg)",
+                  borderBottom: "1px solid var(--color-ink-20)",
+                }}
+              >
+                Mis favoritos {wishlist.count > 0 && `(${wishlist.count})`}
+              </a>
             </nav>
             <a
               href="/pages/rpo-club"
@@ -253,5 +296,32 @@ export default function Header() {
         </div>
       )}
     </header>
+  );
+}
+
+function Badge({ count, color }: { count: number; color: string }) {
+  return (
+    <span
+      aria-hidden
+      style={{
+        position: "absolute",
+        top: "-2px",
+        right: "-4px",
+        minWidth: "18px",
+        height: "18px",
+        padding: "0 5px",
+        borderRadius: "999px",
+        backgroundColor: color,
+        color: "#fff",
+        fontSize: "10.5px",
+        fontWeight: 800,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        lineHeight: 1,
+      }}
+    >
+      {count > 99 ? "99+" : count}
+    </span>
   );
 }
