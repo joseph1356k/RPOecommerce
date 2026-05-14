@@ -48,7 +48,7 @@ export default function TallaUnica() {
       ref={ref}
       style={{
         backgroundColor: "var(--color-surface)",
-        padding: "clamp(72px, 10vw, 120px) clamp(16px, 4vw, 32px)",
+        padding: "clamp(40px, 5vw, 72px) clamp(16px, 4vw, 32px)",
       }}
     >
       <div

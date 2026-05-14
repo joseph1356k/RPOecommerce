@@ -47,14 +47,14 @@ export default function CollectionSection({
     <section
       ref={sectionRef}
       style={{
-        padding: "clamp(56px, 8vw, 96px) clamp(16px, 4vw, 32px)",
+        padding: "clamp(32px, 4vw, 56px) clamp(16px, 4vw, 32px)",
         maxWidth: "1500px",
         margin: "0 auto",
         width: "100%",
         backgroundColor: background === "soft" ? "var(--color-surface)" : "transparent",
       }}
     >
-      <header style={{ marginBottom: "clamp(28px, 4vw, 48px)", maxWidth: "780px" }} className="reveal">
+      <header style={{ marginBottom: "clamp(20px, 2.5vw, 32px)", maxWidth: "780px" }} className="reveal">
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h2 className="section-title">{title}</h2>
         {lede && <p className="section-lede">{lede}</p>}
@@ -80,7 +80,7 @@ export default function CollectionSection({
       </div>
 
       {viewAllHref && (
-        <div style={{ textAlign: "center", marginTop: "clamp(36px, 5vw, 56px)" }} className="reveal">
+        <div style={{ textAlign: "center", marginTop: "clamp(24px, 3vw, 36px)" }} className="reveal">
           <a href={viewAllHref} className="btn btn--ghost">
             {viewAllLabel}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

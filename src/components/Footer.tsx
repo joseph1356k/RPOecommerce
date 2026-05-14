@@ -43,7 +43,7 @@ export default function Footer() {
       <div
         style={{
           borderBottom: "1px solid rgba(255,255,255,0.08)",
-          padding: "clamp(48px, 6vw, 72px) clamp(16px, 4vw, 32px)",
+          padding: "clamp(32px, 4vw, 48px) clamp(16px, 4vw, 32px)",
         }}
       >
         <div
@@ -122,7 +122,7 @@ export default function Footer() {
         style={{
           maxWidth: "1500px",
           margin: "0 auto",
-          padding: "clamp(48px, 6vw, 72px) clamp(16px, 4vw, 32px) 32px",
+          padding: "clamp(36px, 5vw, 56px) clamp(16px, 4vw, 32px) 24px",
           display: "grid",
           gridTemplateColumns: "1.5fr 1fr 1fr 1.5fr",
           gap: "clamp(24px, 3vw, 48px)",

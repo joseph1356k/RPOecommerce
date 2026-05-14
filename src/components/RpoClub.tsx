@@ -80,7 +80,7 @@ export default function RpoClub() {
         backgroundColor: "#0a0a0a",
         color: "#fff",
         overflow: "hidden",
-        padding: "clamp(72px, 10vw, 120px) clamp(16px, 4vw, 32px)",
+        padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 32px)",
       }}
     >
       {/* Faint background image */}
@@ -123,7 +123,7 @@ export default function RpoClub() {
             color: "rgba(255,255,255,0.78)",
             fontSize: "clamp(14px, 1.3vw, 17px)",
             maxWidth: "62ch",
-            margin: "0 auto 48px",
+            margin: "0 auto 32px",
             lineHeight: 1.6,
           }}
         >
@@ -134,8 +134,8 @@ export default function RpoClub() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "clamp(16px, 2vw, 28px)",
-            marginBottom: "clamp(40px, 6vw, 64px)",
+            gap: "clamp(12px, 1.5vw, 20px)",
+            marginBottom: "clamp(28px, 4vw, 44px)",
             textAlign: "left",
           }}
         >

@@ -19,12 +19,12 @@ export default function TestimonialsSection() {
   return (
     <section
       style={{
-        padding: "clamp(56px, 8vw, 96px) 0",
+        padding: "clamp(32px, 4vw, 56px) 0",
         backgroundColor: "var(--color-surface)",
         overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "0 clamp(16px, 4vw, 32px) 32px" }}>
+      <div style={{ maxWidth: "1500px", margin: "0 auto", padding: "0 clamp(16px, 4vw, 32px) 24px" }}>
         <p className="eyebrow">Comunidad RPO</p>
         <h2 className="section-title">Lo que dicen las mujeres que ya nos usan.</h2>
         <p className="section-lede" style={{ marginTop: 12 }}>

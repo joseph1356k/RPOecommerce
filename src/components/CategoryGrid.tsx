@@ -56,12 +56,12 @@ export default function CategoryGrid() {
     <section
       ref={ref}
       style={{
-        padding: "clamp(56px, 8vw, 96px) clamp(16px, 4vw, 32px)",
+        padding: "clamp(32px, 4vw, 56px) clamp(16px, 4vw, 32px)",
         maxWidth: "1500px",
         margin: "0 auto",
       }}
     >
-      <header className="reveal" style={{ textAlign: "center", marginBottom: "clamp(28px, 4vw, 48px)" }}>
+      <header className="reveal" style={{ textAlign: "center", marginBottom: "clamp(20px, 2.5vw, 32px)" }}>
         <p className="eyebrow">Explora por tipo</p>
         <h2 className="section-title">Encuentra tu próxima pieza favorita.</h2>
         <p className="section-lede" style={{ margin: "12px auto 0" }}>

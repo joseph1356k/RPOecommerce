@@ -194,12 +194,12 @@ button {
 
 /* ─── Section primitives ─── */
 .section {
-  padding: clamp(48px, 8vw, 96px) var(--container-pad);
+  padding: clamp(32px, 4vw, 56px) var(--container-pad);
   max-width: var(--page-max-width);
   margin: 0 auto;
   width: 100%;
 }
-.section--tight { padding-block: clamp(32px, 5vw, 56px); }
+.section--tight { padding-block: clamp(20px, 3vw, 36px); }
 .section--full  { max-width: 100%; padding-inline: 0; }
 
 .eyebrow {

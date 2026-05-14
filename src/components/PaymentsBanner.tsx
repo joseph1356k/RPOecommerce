@@ -47,7 +47,7 @@ export default function PaymentsBanner() {
     <section
       style={{
         backgroundColor: "var(--color-surface)",
-        padding: "clamp(56px, 8vw, 88px) clamp(16px, 4vw, 32px)",
+        padding: "clamp(32px, 4vw, 56px) clamp(16px, 4vw, 32px)",
         borderTop: "1px solid var(--color-ink-20)",
       }}
     >
@@ -58,7 +58,7 @@ export default function PaymentsBanner() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
             gap: "clamp(16px, 2vw, 32px)",
-            marginBottom: "clamp(40px, 5vw, 64px)",
+            marginBottom: "clamp(24px, 3vw, 36px)",
           }}
         >
           {TRUST.map((t) => (
@@ -97,7 +97,7 @@ export default function PaymentsBanner() {
             justifyContent: "center",
             gap: "clamp(20px, 3vw, 40px)",
             flexWrap: "wrap",
-            paddingTop: "clamp(28px, 4vw, 40px)",
+            paddingTop: "clamp(20px, 2.5vw, 28px)",
           }}
         >
           <p

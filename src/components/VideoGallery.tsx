@@ -55,12 +55,12 @@ export default function VideoGallery() {
     <section
       ref={ref}
       style={{
-        padding: "clamp(56px, 8vw, 96px) clamp(16px, 4vw, 32px)",
+        padding: "clamp(32px, 4vw, 56px) clamp(16px, 4vw, 32px)",
         maxWidth: "1500px",
         margin: "0 auto",
       }}
     >
-      <header className="reveal" style={{ marginBottom: "clamp(28px, 4vw, 40px)", maxWidth: "780px" }}>
+      <header className="reveal" style={{ marginBottom: "clamp(20px, 2.5vw, 28px)", maxWidth: "780px" }}>
         <p className="eyebrow">Inspírate</p>
         <h2 className="section-title">Mira cómo se mueven nuestras prendas.</h2>
         <p className="section-lede">Estilos reales en cuerpos reales — para que veas el ajuste antes de elegir.</p>
