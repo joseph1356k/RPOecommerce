@@ -2,109 +2,235 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-const SLIDES = [
-  { image: "/images/hero/slide-1.jpg", alt: "RPO Colección" },
-  { image: "/images/hero/slide-2.jpg", alt: "RPO Colección 2" },
-  { image: "/images/hero/slide-3.jpg", alt: "RPO Colección 3" },
-  { image: "/images/hero/slide-4.jpg", alt: "RPO Colección 4" },
-];
-
-const PROMO_TEXT = {
-  top: "¡Solo por",
-  highlight: "24 HORAS!",
-  main: "TE OBSEQUIAMOS",
-  sub: "ENVÍO GRATIS",
-  note: "*Oferta válida del 14 al 15 de mayo\nAplica en canales digitales.",
+type Slide = {
+  image: string;
+  alt: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  ctaLabel: string;
+  ctaHref: string;
 };
+
+const SLIDES: Slide[] = [
+  {
+    image: "/images/hero/slide-1.jpg",
+    alt: "Colección Esencia RPO",
+    eyebrow: "Nueva colección · Esencia",
+    title: "Movimiento que se siente como tuyo.",
+    subtitle: "Prendas que moldean, sostienen y te acompañan del entrenamiento al día a día.",
+    ctaLabel: "Descubrir Esencia",
+    ctaHref: "/collections/esencia-by-dany-osorno",
+  },
+  {
+    image: "/images/hero/slide-2.jpg",
+    alt: "Prisma — diseños protagonistas",
+    eyebrow: "Colección Prisma",
+    title: "Estilo que entrena, descansa y conquista.",
+    subtitle: "Diseños protagonistas con elasticidad multidireccional y horma favorecedora.",
+    ctaLabel: "Ver Prisma",
+    ctaHref: "/collections/prisma",
+  },
+  {
+    image: "/images/hero/slide-3.jpg",
+    alt: "Últimas unidades RPO",
+    eyebrow: "Últimas unidades",
+    title: "Tus favoritos antes de que se vayan.",
+    subtitle: "Piezas seleccionadas con hasta 40% off mientras alcance el inventario.",
+    ctaLabel: "Aprovechar ahora",
+    ctaHref: "/collections/ultimas-unidades",
+  },
+  {
+    image: "/images/hero/slide-4.jpg",
+    alt: "RPO Club — beneficios exclusivos",
+    eyebrow: "RPO Club",
+    title: "Vive RPO más allá de una compra.",
+    subtitle: "Acceso anticipado, beneficios privados y experiencias para nuestra comunidad.",
+    ctaLabel: "Quiero ser parte",
+    ctaHref: "/pages/rpo-club",
+  },
+];
 
 export default function HeroBanner() {
   const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
+    if (paused) return;
     const timer = setInterval(() => {
       setCurrent((c) => (c + 1) % SLIDES.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [paused]);
+
+  const slide = SLIDES[current];
 
   return (
-    <section style={{ position: "relative", width: "100%", height: "calc(100vh - 34px - 64px)", minHeight: "500px", overflow: "hidden" }}>
+    <section
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "calc(100vh - 34px - 64px)",
+        minHeight: "560px",
+        overflow: "hidden",
+        backgroundColor: "#0a0a0a",
+      }}
+    >
       {/* Slides */}
-      {SLIDES.map((slide, i) => (
+      {SLIDES.map((s, i) => (
         <div
           key={i}
+          aria-hidden={i !== current}
           style={{
             position: "absolute",
             inset: 0,
             opacity: i === current ? 1 : 0,
-            transition: "opacity 0.8s ease",
+            transition: "opacity 900ms cubic-bezier(0.22, 1, 0.36, 1)",
             zIndex: i === current ? 1 : 0,
           }}
         >
           <Image
-            src={slide.image}
-            alt={slide.alt}
+            src={s.image}
+            alt={s.alt}
             fill
-            style={{ objectFit: "cover", objectPosition: "center top" }}
+            style={{
+              objectFit: "cover",
+              objectPosition: "center top",
+              transform: i === current ? "scale(1.02)" : "scale(1)",
+              transition: "transform 8000ms ease-out",
+            }}
             priority={i === 0}
+            sizes="100vw"
           />
         </div>
       ))}
 
-      {/* Promo overlay text */}
+      {/* Gradient overlay for legibility (subtle, premium) */}
       <div
+        aria-hidden
         style={{
           position: "absolute",
-          right: "5%",
-          top: "50%",
-          transform: "translateY(-50%)",
+          inset: 0,
+          zIndex: 2,
+          background:
+            "linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.05) 100%)",
+        }}
+      />
+
+      {/* Content */}
+      <div
+        key={`content-${current}`}
+        style={{
+          position: "absolute",
+          left: "clamp(20px, 6vw, 80px)",
+          bottom: "clamp(80px, 14vh, 140px)",
           zIndex: 10,
           color: "#fff",
-          textAlign: "right",
-          maxWidth: "500px",
+          maxWidth: "640px",
         }}
       >
-        <p style={{ fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 400, margin: 0, lineHeight: 1.2 }}>
-          {PROMO_TEXT.top}
+        <p
+          className="fade-up"
+          style={{
+            fontSize: "12px",
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            fontWeight: 700,
+            margin: 0,
+            opacity: 0.92,
+          }}
+        >
+          {slide.eyebrow}
         </p>
-        <p style={{ fontSize: "clamp(48px, 6vw, 88px)", fontWeight: 800, margin: 0, lineHeight: 1 }}>
-          {PROMO_TEXT.highlight}
+        <h1
+          className="fade-up fade-up-delay-1"
+          style={{
+            fontSize: "clamp(34px, 5vw, 64px)",
+            fontWeight: 800,
+            lineHeight: 1.05,
+            letterSpacing: "-0.015em",
+            margin: "14px 0 14px",
+            maxWidth: "12ch",
+          }}
+        >
+          {slide.title}
+        </h1>
+        <p
+          className="fade-up fade-up-delay-2"
+          style={{
+            fontSize: "clamp(14px, 1.3vw, 17px)",
+            lineHeight: 1.55,
+            opacity: 0.92,
+            margin: "0 0 28px",
+            maxWidth: "44ch",
+            fontWeight: 400,
+          }}
+        >
+          {slide.subtitle}
         </p>
-        <p style={{ fontSize: "clamp(20px, 2.5vw, 36px)", fontWeight: 400, margin: "16px 0 0", lineHeight: 1.1 }}>
-          {PROMO_TEXT.main}
-        </p>
-        <p style={{ fontSize: "clamp(40px, 5vw, 72px)", fontWeight: 800, margin: 0, lineHeight: 1 }}>
-          {PROMO_TEXT.sub}
-        </p>
-        <p style={{ fontSize: "clamp(11px, 1.2vw, 16px)", fontWeight: 400, margin: "16px 0 0", lineHeight: 1.5, whiteSpace: "pre-line" }}>
-          {PROMO_TEXT.note}
-        </p>
-      </div>
-
-      {/* RPO logo overlay */}
-      <div style={{ position: "absolute", bottom: "24px", left: "24px", zIndex: 10 }}>
-        <Image src="/images/logo-white.png" alt="RPO" width={100} height={32} style={{ objectFit: "contain" }} />
+        <a
+          href={slide.ctaHref}
+          className="btn btn--primary fade-up fade-up-delay-3"
+          style={{
+            background: "#fff",
+            color: "#000",
+            padding: "16px 36px",
+          }}
+        >
+          {slide.ctaLabel}
+        </a>
       </div>
 
       {/* Slide dots */}
-      <div style={{ position: "absolute", bottom: "24px", left: "50%", transform: "translateX(-50%)", zIndex: 10, display: "flex", gap: "8px" }}>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "32px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 10,
+          display: "flex",
+          gap: "10px",
+        }}
+      >
         {SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            aria-label={`Slide ${i + 1}`}
+            aria-label={`Ir al slide ${i + 1}`}
             style={{
-              width: i === current ? "24px" : "8px",
+              width: i === current ? "32px" : "8px",
               height: "8px",
-              borderRadius: "4px",
-              backgroundColor: i === current ? "#fff" : "rgba(255,255,255,0.5)",
+              borderRadius: "999px",
+              backgroundColor: i === current ? "#fff" : "rgba(255,255,255,0.4)",
               border: "none",
               cursor: "pointer",
               padding: 0,
-              transition: "all 0.3s ease",
+              transition: "all 350ms cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           />
         ))}
+      </div>
+
+      {/* Scroll hint */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          right: "24px",
+          bottom: "32px",
+          zIndex: 10,
+          color: "rgba(255,255,255,0.75)",
+          fontSize: "11px",
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          writingMode: "vertical-rl",
+          fontWeight: 600,
+        }}
+      >
+        Scroll
       </div>
     </section>
   );

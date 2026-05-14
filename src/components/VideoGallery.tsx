@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 
 const VIDEOS = [
@@ -15,102 +17,120 @@ const VIDEOS = [
   },
   {
     poster: "/images/products/esencia-3.jpg",
-    title: "Enterizo Largo Aura",
-    price: "189.900 COP",
-    productHref: "/products/enterizo-largo-aura",
+    title: "Set Rossy Esencia",
+    price: "239.800 COP",
+    productHref: "/products/set-rossy-esencia",
   },
   {
     poster: "/images/products/esencia-4.jpg",
-    title: "Enterizo Corto Calma Pausa",
-    price: "159.000 COP",
-    productHref: "/products/enterizo-corto-calma-pausa",
+    title: "Enterizo Movee",
+    price: "169.900 COP",
+    productHref: "/products/enterizo-movee",
   },
 ];
 
 export default function VideoGallery() {
+  const ref = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const items = el.querySelectorAll(".reveal");
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    items.forEach((it) => io.observe(it));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section style={{ width: "100%", backgroundColor: "#fff" }}>
+    <section
+      ref={ref}
+      style={{
+        padding: "clamp(56px, 8vw, 96px) clamp(16px, 4vw, 32px)",
+        maxWidth: "1500px",
+        margin: "0 auto",
+      }}
+    >
+      <header className="reveal" style={{ marginBottom: "clamp(28px, 4vw, 40px)", maxWidth: "780px" }}>
+        <p className="eyebrow">Inspírate</p>
+        <h2 className="section-title">Mira cómo se mueven nuestras prendas.</h2>
+        <p className="section-lede">Estilos reales en cuerpos reales — para que veas el ajuste antes de elegir.</p>
+      </header>
+
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "clamp(12px, 1.5vw, 20px)",
         }}
       >
         {VIDEOS.map((video, i) => (
-          <div key={i} style={{ position: "relative" }}>
-            {/* Video thumbnail */}
+          <a
+            key={i}
+            href={video.productHref}
+            className="reveal lift"
+            style={{
+              display: "block",
+              textDecoration: "none",
+              color: "inherit",
+              borderRadius: "6px",
+              overflow: "hidden",
+              transitionDelay: `${i * 70}ms`,
+            }}
+          >
             <div style={{ position: "relative", aspectRatio: "9/16", backgroundColor: "#111", overflow: "hidden" }}>
               <Image
                 src={video.poster}
                 alt={video.title}
                 fill
-                style={{ objectFit: "cover", opacity: 0.85 }}
-                sizes="25vw"
+                style={{ objectFit: "cover" }}
+                sizes="(max-width: 768px) 50vw, 25vw"
+                loading="lazy"
               />
-              {/* Play button */}
-              <button
-                aria-label="Play video"
+              <div
+                aria-hidden
                 style={{
                   position: "absolute",
                   inset: 0,
+                  background: "linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.55) 100%)",
+                }}
+              />
+              <div
+                aria-label="Play"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "50%",
+                  backgroundColor: "rgba(255,255,255,0.92)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
                 }}
               >
-                <div
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(255,255,255,0.9)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <svg width="16" height="18" viewBox="0 0 16 18" fill="#000">
-                    <path d="M1 1l14 8L1 17V1z" />
-                  </svg>
-                </div>
-              </button>
-              {/* Controls overlay */}
-              <div style={{ position: "absolute", top: "12px", right: "12px", display: "flex", gap: "8px" }}>
-                <button style={{ background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "4px", padding: "4px 6px", cursor: "pointer" }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
-                    <line x1="1" y1="1" x2="23" y2="23" /><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" /><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" />
-                  </svg>
-                </button>
-                <button style={{ background: "rgba(0,0,0,0.5)", border: "none", borderRadius: "4px", padding: "4px 6px", cursor: "pointer" }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
-                    <polyline points="15 3 21 3 21 9" /><polyline points="9 21 3 21 3 15" /><line x1="21" y1="3" x2="14" y2="10" /><line x1="3" y1="21" x2="10" y2="14" />
-                  </svg>
-                </button>
+                <svg width="18" height="20" viewBox="0 0 16 18" fill="#000">
+                  <path d="M1 1l14 8L1 17V1z" />
+                </svg>
+              </div>
+              <div style={{ position: "absolute", left: "16px", right: "16px", bottom: "16px", color: "#fff" }}>
+                <p style={{ margin: 0, fontSize: "12.5px", fontWeight: 700, letterSpacing: "0.02em" }}>{video.title}</p>
+                <p style={{ margin: "2px 0 0", fontSize: "12px", opacity: 0.85, fontWeight: 600 }}>{video.price}</p>
               </div>
             </div>
-
-            {/* Product info below video */}
-            <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
-              <div style={{ width: "40px", height: "40px", borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-                <Image
-                  src={video.poster}
-                  alt={video.title}
-                  width={40}
-                  height={40}
-                  style={{ objectFit: "cover", width: "100%", height: "100%" }}
-                />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ margin: 0, fontSize: "12px", fontWeight: 600, textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
-                  {video.title}
-                </p>
-                <p style={{ margin: 0, fontSize: "12px", color: "#444" }}>{video.price}</p>
-              </div>
-            </div>
-          </div>
+          </a>
         ))}
       </div>
     </section>

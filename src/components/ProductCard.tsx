@@ -6,14 +6,14 @@ interface Props {
   product: Product;
 }
 
-function StarRating({ rating = 4, count }: { rating?: number; count?: number }) {
+function StarRating({ rating = 5, count }: { rating?: number; count?: number }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "6px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "8px" }}>
       {Array.from({ length: 5 }).map((_, i) => (
         <svg
           key={i}
-          width="12"
-          height="12"
+          width="11"
+          height="11"
           viewBox="0 0 24 24"
           fill={i < rating ? "#000" : "none"}
           stroke="#000"
@@ -23,76 +23,159 @@ function StarRating({ rating = 4, count }: { rating?: number; count?: number }) 
         </svg>
       ))}
       {count !== undefined && (
-        <span style={{ fontSize: "11px", color: "#666", marginLeft: "2px" }}>{count} reseñas</span>
+        <span style={{ fontSize: "11px", color: "#888", marginLeft: "4px" }}>({count})</span>
       )}
     </div>
   );
 }
 
+function badgeFor(product: Product) {
+  if (product.badge) return { label: product.badge, color: "#000" };
+  if (product.tags?.includes("ultimas-unidades")) return { label: "Últimas unidades", color: "#B95E3C" };
+  if (product.tags?.includes("oferta")) return { label: "Oferta", color: "#000" };
+  if (product.tags?.includes("novedad")) return { label: "Nuevo", color: "#0a0a0a" };
+  if (product.tags?.includes("best-seller")) return { label: "Best seller", color: "#B98A6E" };
+  return null;
+}
+
 export default function ProductCard({ product }: Props) {
+  const badge = badgeFor(product);
+
   return (
     <a
       href={product.href}
+      className="product-card"
       style={{ display: "block", textDecoration: "none", color: "inherit" }}
     >
-      <div
-        style={{ position: "relative", aspectRatio: "3/4", overflow: "hidden", backgroundColor: "#f5f5f5" }}
-        className="product-card-img"
-      >
-        {product.badge && (
+      <div className="product-img-wrap">
+        {badge && (
           <span
             style={{
               position: "absolute",
               top: "12px",
               left: "12px",
-              zIndex: 2,
-              backgroundColor: "#000",
+              zIndex: 3,
+              backgroundColor: badge.color,
               color: "#fff",
-              fontSize: "11px",
+              fontSize: "10.5px",
               fontWeight: 700,
-              padding: "4px 10px",
+              padding: "5px 11px",
               borderRadius: "2px",
-              letterSpacing: "0.05em",
+              letterSpacing: "0.08em",
               textTransform: "uppercase",
             }}
           >
-            {product.badge}
+            {badge.label}
           </span>
         )}
+
         <Image
           src={product.image}
           alt={product.title}
           fill
-          style={{ objectFit: "cover", transition: "transform 0.4s ease" }}
           className="product-img"
-          sizes="(max-width: 768px) 50vw, 25vw"
+          style={{ objectFit: "cover" }}
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
         />
+        {product.imageHover && (
+          <Image
+            src={product.imageHover}
+            alt=""
+            fill
+            className="product-img-2"
+            style={{ objectFit: "cover" }}
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          />
+        )}
+
+        {/* Quick add CTA appears on hover */}
+        <button
+          type="button"
+          className="quick-add"
+          aria-label={`Vista rápida de ${product.title}`}
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href = product.href;
+          }}
+          style={{
+            background: "#fff",
+            color: "#000",
+            fontSize: "11.5px",
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            padding: "12px 16px",
+            borderRadius: "2px",
+            border: "1px solid #000",
+            width: "100%",
+          }}
+        >
+          + Vista rápida
+        </button>
       </div>
 
-      <div style={{ padding: "12px 0 0" }}>
+      <div style={{ padding: "14px 0 0" }}>
         <h3
           style={{
-            fontSize: "13px",
-            fontWeight: 600,
+            fontSize: "12.5px",
+            fontWeight: 700,
             margin: 0,
             lineHeight: 1.3,
-            textTransform: "uppercase",
-            letterSpacing: "0.04em",
+            letterSpacing: "0.02em",
           }}
         >
           {product.title}
         </h3>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
-          <span style={{ fontSize: "14px", fontWeight: 700, color: "#000" }}>{product.price}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px" }}>
+          <span style={{ fontSize: "13.5px", fontWeight: 700, color: "#000" }}>{product.price}</span>
           {product.comparePrice && (
-            <span style={{ fontSize: "13px", color: "#999", textDecoration: "line-through" }}>
+            <span style={{ fontSize: "12.5px", color: "#999", textDecoration: "line-through" }}>
               {product.comparePrice}
+            </span>
+          )}
+          {product.comparePrice && product.priceValue && (
+            <span style={{ fontSize: "10.5px", color: "#B95E3C", fontWeight: 700, letterSpacing: "0.04em" }}>
+              {(() => {
+                const compareVal = Number(product.comparePrice.replace(/\D/g, ""));
+                if (!compareVal) return null;
+                const pct = Math.round(((compareVal - product.priceValue) / compareVal) * 100);
+                return `−${pct}%`;
+              })()}
             </span>
           )}
         </div>
 
-        {(product.rating !== undefined || product.reviewCount !== undefined) && (
+        {product.colors && product.colors.length > 0 && (
+          <div style={{ display: "flex", gap: "6px", marginTop: "8px" }}>
+            {product.colors.slice(0, 4).map((c) => {
+              const map: Record<string, string> = {
+                negro: "#0a0a0a",
+                nude: "#D7BBA6",
+                gris: "#7d7d7d",
+                beige: "#C7B299",
+                estampado: "linear-gradient(135deg,#C7B299,#7d7d7d,#0a0a0a)",
+              };
+              const bg = map[c] ?? "#ccc";
+              return (
+                <span
+                  key={c}
+                  title={c}
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    background: bg,
+                    border: "1px solid rgba(0,0,0,0.15)",
+                    display: "inline-block",
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
+
+        {(product.rating !== undefined && product.reviewCount !== undefined) && (
           <StarRating rating={product.rating} count={product.reviewCount} />
         )}
       </div>
