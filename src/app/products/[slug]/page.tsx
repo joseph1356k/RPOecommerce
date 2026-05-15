@@ -10,17 +10,30 @@ export function generateStaticParams() {
   return ALL_PRODUCTS.filter((p) => p.slug).map((p) => ({ slug: p.slug! }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const product = getProductBySlug(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
   if (!product) return { title: "Producto · RPO" };
   return {
     title: `${product.title} · RPO`,
-    description: product.benefitsCopy ?? `${product.title} — ${product.price}. Ropa deportiva RPO.`,
+    description:
+      product.story ??
+      product.benefitsCopy ??
+      `${product.title} — ${product.price}. Ropa deportiva RPO.`,
   };
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
   if (!product) notFound();
 
   return (

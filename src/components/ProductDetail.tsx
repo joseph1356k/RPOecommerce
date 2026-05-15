@@ -97,13 +97,34 @@ export default function ProductDetail({ product }: Props) {
             )}
           </p>
 
-          <h1 style={{ fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 800, margin: "0 0 8px", lineHeight: 1.15 }}>
+          {product.collection && (
+            <p
+              style={{
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "var(--color-accent)",
+                margin: "0 0 6px",
+              }}
+            >
+              Colección {product.collection}
+            </p>
+          )}
+
+          <h1 style={{ fontSize: "clamp(26px, 3.2vw, 38px)", fontWeight: 800, margin: "0 0 6px", lineHeight: 1.1, letterSpacing: "-0.01em" }}>
             {product.title}
           </h1>
 
+          {product.subtitle && (
+            <p style={{ fontSize: "clamp(14px, 1.3vw, 16px)", color: "var(--color-ink-60)", margin: "0 0 14px", lineHeight: 1.4, fontWeight: 400 }}>
+              {product.subtitle}
+            </p>
+          )}
+
           {/* Rating */}
           {product.rating && product.reviewCount && (
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "14px" }}>
               <div style={{ display: "flex", gap: "2px" }}>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill={i < product.rating! ? "#000" : "none"} stroke="#000" strokeWidth="2">
@@ -112,14 +133,14 @@ export default function ProductDetail({ product }: Props) {
                 ))}
               </div>
               <a href="#reviews" style={{ fontSize: "12.5px", textDecoration: "underline", color: "var(--color-ink-60)" }}>
-                {product.reviewCount} reseña{product.reviewCount === 1 ? "" : "s"}
+                {product.reviewCount} reseña{product.reviewCount === 1 ? "" : "s"} verificada{product.reviewCount === 1 ? "" : "s"}
               </a>
             </div>
           )}
 
           {/* Price */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "0 0 8px" }}>
-            <span style={{ fontSize: "22px", fontWeight: 800 }}>{product.price}</span>
+            <span style={{ fontSize: "24px", fontWeight: 800 }}>{product.price}</span>
             {product.comparePrice && (
               <>
                 <span style={{ fontSize: "16px", color: "var(--color-ink-40)", textDecoration: "line-through" }}>
@@ -143,20 +164,28 @@ export default function ProductDetail({ product }: Props) {
               </>
             )}
           </div>
-          <p style={{ fontSize: "11.5px", color: "var(--color-ink-60)", margin: "0 0 24px" }}>
-            o 3 cuotas con <strong>Addi</strong> y <strong>Sistecrédito</strong>.
+          <p style={{ fontSize: "12px", color: "var(--color-ink-60)", margin: "0 0 24px" }}>
+            o paga en 3 cuotas con <strong>Addi</strong> y <strong>Sistecrédito</strong>.
           </p>
 
-          {/* Benefits short */}
-          {product.benefitsCopy && (
-            <p style={{ fontSize: "14.5px", color: "var(--color-fg)", lineHeight: 1.6, margin: "0 0 28px" }}>
-              {product.benefitsCopy}
+          {/* Story (lifestyle paragraph — Alo/Lululemon voice) */}
+          {product.story && (
+            <p
+              style={{
+                fontSize: "14.5px",
+                color: "var(--color-fg)",
+                lineHeight: 1.65,
+                margin: "0 0 24px",
+                fontWeight: 400,
+              }}
+            >
+              {product.story}
             </p>
           )}
 
           {/* Color */}
           {product.colors && product.colors.length > 0 && (
-            <div style={{ marginBottom: "24px" }}>
+            <div style={{ marginBottom: "20px" }}>
               <p
                 style={{
                   fontSize: "11.5px",
@@ -215,7 +244,7 @@ export default function ProductDetail({ product }: Props) {
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: "12.5px", fontWeight: 700, margin: 0 }}>Talla única — fit real</p>
               <p style={{ fontSize: "12px", color: "var(--color-ink-60)", margin: "2px 0 0", lineHeight: 1.5 }}>
-                Diseñado para cuerpos 36–42 (S a XL). Elasticidad 4-way que se adapta sin apretar.
+                {product.fitNotes ?? "Diseñado para cuerpos 36–42 (S a XL). Elasticidad 4-way que se adapta sin apretar."}
               </p>
               <a href="#ajuste" style={{ fontSize: "12px", fontWeight: 700, textDecoration: "underline", marginTop: "6px", display: "inline-block" }}>
                 Ver guía de ajuste
@@ -280,7 +309,42 @@ export default function ProductDetail({ product }: Props) {
             <li>🔒 Pago seguro con cifrado SSL.</li>
           </ul>
 
-          {/* WhatsApp asistente de compra */}
+          {/* Styled for chips (lifestyle) */}
+          {product.styledFor && product.styledFor.length > 0 && (
+            <div style={{ marginBottom: "24px" }}>
+              <p
+                style={{
+                  fontSize: "11.5px",
+                  fontWeight: 700,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  margin: "0 0 10px",
+                  color: "var(--color-fg)",
+                }}
+              >
+                Hecho para
+              </p>
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                {product.styledFor.map((s) => (
+                  <span
+                    key={s}
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      padding: "6px 12px",
+                      borderRadius: "999px",
+                      backgroundColor: "var(--color-surface-2)",
+                      color: "var(--color-fg)",
+                    }}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* WhatsApp asistente */}
           <a
             href={whatsappUrl({ kind: "product", title: product.title, color })}
             target="_blank"
@@ -312,6 +376,41 @@ export default function ProductDetail({ product }: Props) {
             </span>
           </a>
 
+          {/* Features grid (Lululemon voice) */}
+          {product.features && product.features.length > 0 && (
+            <section style={{ marginBottom: "32px" }}>
+              <p className="eyebrow">Por qué te va a gustar</p>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "18px 24px",
+                  marginTop: "12px",
+                }}
+              >
+                {product.features.map((f) => (
+                  <div key={f.label}>
+                    <p
+                      style={{
+                        fontSize: "11.5px",
+                        fontWeight: 700,
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        color: "var(--color-accent)",
+                        margin: 0,
+                      }}
+                    >
+                      {f.label}
+                    </p>
+                    <p style={{ fontSize: "13.5px", color: "var(--color-fg)", margin: "4px 0 0", lineHeight: 1.5 }}>
+                      {f.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Accordion */}
           <div id="ajuste" style={{ borderTop: "1px solid var(--color-ink-20)" }}>
             {[
@@ -324,12 +423,7 @@ export default function ProductDetail({ product }: Props) {
                       Talla única real: hecha en tejido con <strong>elasticidad 4-way</strong> que cede hasta un 80% en cualquier dirección.
                       Diseñada para cuerpos <strong>36 a 42</strong> (S a XL).
                     </p>
-                    <ul style={{ paddingLeft: "18px", margin: 0, lineHeight: 1.7 }}>
-                      <li>Compresión suave a media — sostiene sin apretar.</li>
-                      <li>Pretina alta que moldea cintura y caderas.</li>
-                      <li>Costuras planas: sin marcas ni rozaduras.</li>
-                      <li>Tela opaca incluso en sentadillas profundas.</li>
-                    </ul>
+                    {product.fitNotes && <p style={{ margin: "10px 0 0", fontStyle: "italic" }}>{product.fitNotes}</p>}
                   </>
                 ),
               },
@@ -338,13 +432,17 @@ export default function ProductDetail({ product }: Props) {
                 title: "Tela y cuidado",
                 content: (
                   <>
-                    <p style={{ margin: "0 0 10px" }}>
-                      Mezcla de poliamida y elastano de alta recuperación. Tacto sedoso, respirable y de secado rápido.
-                    </p>
+                    {product.fabric && (
+                      <p style={{ margin: "0 0 10px" }}>{product.fabric}</p>
+                    )}
                     <ul style={{ paddingLeft: "18px", margin: 0, lineHeight: 1.7 }}>
-                      <li>Lavado a mano o ciclo delicado en frío.</li>
-                      <li>No usar suavizante (afecta la elasticidad).</li>
-                      <li>Secar a la sombra. No planchar.</li>
+                      {(product.care ?? [
+                        "Lavado a mano o ciclo delicado en frío.",
+                        "No usar suavizante (afecta la elasticidad).",
+                        "Secar a la sombra. No planchar.",
+                      ]).map((c) => (
+                        <li key={c}>{c}</li>
+                      ))}
                     </ul>
                   </>
                 ),
@@ -408,6 +506,67 @@ export default function ProductDetail({ product }: Props) {
           </div>
         </div>
       </article>
+
+      {/* Reviews */}
+      {product.reviews && product.reviews.length > 0 && (
+        <section
+          id="reviews"
+          style={{
+            backgroundColor: "var(--color-surface)",
+            padding: "clamp(40px, 5vw, 72px) clamp(16px, 4vw, 32px)",
+          }}
+        >
+          <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
+            <header style={{ marginBottom: "clamp(20px, 2.5vw, 32px)", maxWidth: "640px" }}>
+              <p className="eyebrow">Reseñas verificadas</p>
+              <h2 className="section-title">Lo que dicen quienes ya lo usan.</h2>
+              <p className="section-lede" style={{ marginTop: 12 }}>
+                Reseñas de clientas reales que ya compraron y recibieron este producto.
+              </p>
+            </header>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: "16px",
+              }}
+            >
+              {product.reviews.map((r, i) => (
+                <article
+                  key={i}
+                  style={{
+                    backgroundColor: "#fff",
+                    border: "1px solid var(--color-ink-20)",
+                    borderRadius: "6px",
+                    padding: "20px",
+                  }}
+                >
+                  <div style={{ display: "flex", gap: "2px", marginBottom: "10px" }}>
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <svg key={idx} width="13" height="13" viewBox="0 0 24 24" fill={idx < r.rating ? "#000" : "none"} stroke="#000" strokeWidth="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26" />
+                      </svg>
+                    ))}
+                  </div>
+                  <p style={{ fontSize: "14px", color: "var(--color-fg)", margin: "0 0 14px", lineHeight: 1.55, fontWeight: 500 }}>
+                    “{r.text}”
+                  </p>
+                  <p style={{ fontSize: "12px", color: "var(--color-ink-60)", margin: 0, fontWeight: 600 }}>
+                    — {r.author}
+                    {r.city && `, ${r.city}`}
+                    {r.verified && (
+                      <span style={{ color: "var(--color-success)", marginLeft: "8px" }}>
+                        ✓ Compra verificada
+                      </span>
+                    )}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Cross-sell */}
       <CompleteYourLook current={product} title="Completa el look" />

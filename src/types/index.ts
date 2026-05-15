@@ -18,10 +18,24 @@ export type ProductCollection =
 
 export type ProductTag = "novedad" | "best-seller" | "oferta" | "ultimas-unidades";
 
+export interface ProductFeature {
+  label: string;
+  value: string;
+}
+
+export interface ProductReview {
+  rating: number;
+  text: string;
+  author: string;
+  city?: string;
+  verified?: boolean;
+}
+
 export interface Product {
   id: string;
   slug?: string;
   title: string;
+  subtitle?: string;
   price: string;
   priceValue?: number;
   comparePrice?: string;
@@ -39,6 +53,14 @@ export interface Product {
   benefitsCopy?: string;
   inStock?: boolean;
   intent?: ProductIntent[];
+  // Rich PDP content
+  story?: string;
+  features?: ProductFeature[];
+  fabric?: string;
+  care?: string[];
+  fitNotes?: string;
+  styledFor?: string[];
+  reviews?: ProductReview[];
 }
 
 export type ProductIntent = "entrenar" | "diario" | "viajar" | "comodidad" | "estilizada" | "look-completo";

@@ -365,6 +365,10 @@ button {
   .filter-sidebar { position: static !important; max-height: none !important; }
   .footer-grid { grid-template-columns: 1fr 1fr !important; }
   .footer-newsletter { grid-template-columns: 1fr !important; }
+  .pdp-grid { grid-template-columns: 1fr !important; }
+  .pdp-gallery-wrap { position: static !important; }
+  .product-gallery { grid-template-columns: 1fr !important; }
+  .gallery-thumbs { flex-direction: row !important; overflow-x: auto !important; }
 }
 @media (max-width: 480px) {
   .footer-grid { grid-template-columns: 1fr !important; }
