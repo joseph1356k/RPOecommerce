@@ -84,7 +84,7 @@ export default function ProductCard({ product, source }: Props) {
           </span>
         )}
 
-        {/* Wishlist heart */}
+        {/* Wishlist heart — 40px visible, 44px hit area */}
         <button
           type="button"
           aria-label={isWishlisted ? "Quitar de favoritos" : "Guardar en favoritos"}
@@ -96,11 +96,11 @@ export default function ProductCard({ product, source }: Props) {
           }}
           style={{
             position: "absolute",
-            top: "10px",
-            right: "10px",
+            top: "6px",
+            right: "6px",
             zIndex: 3,
-            width: "34px",
-            height: "34px",
+            width: "40px",
+            height: "40px",
             borderRadius: "50%",
             backgroundColor: "rgba(255,255,255,0.92)",
             backdropFilter: "blur(4px)",
@@ -152,7 +152,7 @@ export default function ProductCard({ product, source }: Props) {
           />
         )}
 
-        {/* Quick add */}
+        {/* Quick add — desktop hover, mobile always visible compact */}
         <button
           type="button"
           className="quick-add"
@@ -170,16 +170,17 @@ export default function ProductCard({ product, source }: Props) {
           style={{
             background: "#0a0a0a",
             color: "#fff",
-            fontSize: "11.5px",
+            fontSize: "11px",
             fontWeight: 700,
-            letterSpacing: "0.12em",
+            letterSpacing: "0.1em",
             textTransform: "uppercase",
-            padding: "12px 16px",
+            padding: "11px 12px",
             borderRadius: "2px",
             width: "100%",
+            minHeight: "40px",
           }}
         >
-          + Añadir al carrito
+          + Agregar
         </button>
       </div>
 

@@ -41,6 +41,7 @@ export default function CatalogClient() {
   const [colors, setColors] = useState<Record<string, boolean>>({});
   const [price, setPrice] = useState<string>("all");
   const [sort, setSort] = useState<SortValue>("recommended");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -55,6 +56,8 @@ export default function CatalogClient() {
     if (intentParam) setIntent(intentParam);
     const q = params.get("quick");
     if (q) setQuick(q);
+    const sq = params.get("q");
+    if (sq) setSearchQuery(sq);
     const t = setTimeout(() => setLoading(false), 250);
     return () => clearTimeout(t);
   }, []);
@@ -79,6 +82,15 @@ export default function CatalogClient() {
     // Intent (momento de uso)
     if (intent) list = list.filter((p) => p.intent?.includes(intent));
 
+    // Free-text search
+    if (searchQuery.trim()) {
+      const term = searchQuery.toLowerCase();
+      list = list.filter((p) => {
+        const hay = `${p.title} ${p.subtitle ?? ""} ${p.type ?? ""} ${(p.colors ?? []).join(" ")} ${p.collection ?? ""}`.toLowerCase();
+        return hay.includes(term);
+      });
+    }
+
     // Colors
     const activeColors = Object.keys(colors).filter((k) => colors[k]);
     if (activeColors.length) list = list.filter((p) => p.colors?.some((c) => activeColors.includes(c)));
@@ -96,7 +108,7 @@ export default function CatalogClient() {
     if (sort === "newest") list.sort((a, b) => Number(b.tags?.includes("novedad")) - Number(a.tags?.includes("novedad")));
 
     return list;
-  }, [quick, types, collections, intent, colors, price, sort]);
+  }, [quick, types, collections, intent, colors, price, sort, searchQuery]);
 
   const activeCount =
     Object.values(types).filter(Boolean).length +
@@ -167,29 +179,47 @@ export default function CatalogClient() {
         })}
       </div>
 
-      {/* Toolbar (mobile filter open + sort) */}
+      {/* Toolbar — sticky on mobile so filters/sort always reachable */}
       <div
+        className="catalog-toolbar"
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           gap: "12px",
-          padding: "12px 0",
+          padding: "10px 0",
           borderTop: "1px solid var(--color-ink-20)",
           borderBottom: "1px solid var(--color-ink-20)",
-          marginBottom: "32px",
+          marginBottom: "20px",
+          backgroundColor: "#fff",
         }}
       >
         <button
           type="button"
-          className="only-mobile chip"
+          className="only-mobile"
           onClick={() => setMobileFiltersOpen(true)}
-          style={{ borderColor: "var(--color-fg)" }}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            minHeight: "44px",
+            padding: "0 14px",
+            border: "1px solid var(--color-fg)",
+            borderRadius: "999px",
+            fontSize: "13px",
+            fontWeight: 700,
+            color: "var(--color-fg)",
+            background: "#fff",
+          }}
         >
-          Filtros {activeCount > 0 && `(${activeCount})`}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="4" y1="6" x2="20" y2="6" /><line x1="7" y1="12" x2="20" y2="12" /><line x1="10" y1="18" x2="20" y2="18" />
+            <circle cx="6" cy="12" r="2" fill="currentColor" /><circle cx="13" cy="6" r="2" fill="currentColor" /><circle cx="17" cy="18" r="2" fill="currentColor" />
+          </svg>
+          Filtrar{activeCount > 0 && ` · ${activeCount}`}
         </button>
         <p style={{ fontSize: "13px", color: "var(--color-ink-60)", margin: 0 }}>
-          {loading ? "Cargando…" : `${filtered.length} producto${filtered.length === 1 ? "" : "s"}`}
+          {loading ? "Cargando…" : `${filtered.length} prenda${filtered.length === 1 ? "" : "s"}`}
         </p>
         <label style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "var(--color-ink-60)" }}>
           <span>Ordenar:</span>
@@ -330,105 +360,204 @@ export default function CatalogClient() {
             <EmptyState onClear={clearAll} />
           ) : (
             <div
+              className="catalog-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                gap: "clamp(12px, 1.5vw, 24px)",
-                rowGap: "clamp(28px, 3vw, 40px)",
+                gap: "clamp(8px, 1.5vw, 24px)",
+                rowGap: "clamp(20px, 3vw, 40px)",
               }}
             >
               {filtered.map((p) => (
-                <ProductCard key={p.id} product={p} />
+                <ProductCard key={p.id} product={p} source="catalog" />
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile filter drawer */}
+      {/* Mobile bottom sheet for filters */}
       {mobileFiltersOpen && (
         <div
           role="dialog"
           aria-modal="true"
+          aria-label="Filtros"
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 500,
-            backgroundColor: "rgba(0,0,0,0.4)",
+            backgroundColor: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "flex-end",
+            animation: "fadeIn 200ms cubic-bezier(0.22,1,0.36,1)",
           }}
           onClick={() => setMobileFiltersOpen(false)}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              bottom: 0,
-              width: "min(90vw, 360px)",
               backgroundColor: "#fff",
-              padding: "24px",
-              overflowY: "auto",
-              boxShadow: "var(--shadow-lg)",
+              width: "100%",
+              maxHeight: "85dvh",
+              borderTopLeftRadius: "20px",
+              borderTopRightRadius: "20px",
+              boxShadow: "0 -12px 40px rgba(0,0,0,0.18)",
+              animation: "slideUpSheet 320ms cubic-bezier(0.22,1,0.36,1)",
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "16px", fontWeight: 800, margin: 0 }}>Filtros</h3>
+            {/* Drag handle */}
+            <div
+              aria-hidden
+              onClick={() => setMobileFiltersOpen(false)}
+              style={{
+                padding: "10px 0 6px",
+                display: "flex",
+                justifyContent: "center",
+                cursor: "pointer",
+              }}
+            >
+              <span
+                style={{
+                  width: "44px",
+                  height: "4px",
+                  borderRadius: "999px",
+                  backgroundColor: "var(--color-ink-20)",
+                }}
+              />
+            </div>
+
+            <header
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 20px 14px",
+                borderBottom: "1px solid var(--color-ink-20)",
+              }}
+            >
+              <h3 style={{ fontSize: "16px", fontWeight: 800, margin: 0 }}>
+                Filtrar looks
+              </h3>
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(false)}
                 aria-label="Cerrar filtros"
-                style={{ fontSize: "20px", padding: "4px 8px" }}
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
-                ✕
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
+            </header>
+
+            <div style={{ overflowY: "auto", padding: "16px 20px 12px", flex: 1 }}>
+              <FilterGroup title="Tipo de prenda">
+                {PRODUCT_TYPES.map((t) => (
+                  <CheckboxRow
+                    key={t.value}
+                    label={t.label}
+                    checked={!!types[t.value as ProductType]}
+                    onChange={(c) => setTypes({ ...types, [t.value]: c })}
+                  />
+                ))}
+              </FilterGroup>
+              <FilterGroup title="Colección">
+                {PRODUCT_COLLECTIONS.map((c) => (
+                  <CheckboxRow
+                    key={c.value}
+                    label={c.label}
+                    checked={!!collections[c.value as ProductCollection]}
+                    onChange={(v) => setCollections({ ...collections, [c.value]: v })}
+                  />
+                ))}
+              </FilterGroup>
+              <FilterGroup title="Color">
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+                  {PRODUCT_COLORS.map((c) => {
+                    const active = !!colors[c.value];
+                    return (
+                      <button
+                        key={c.value}
+                        type="button"
+                        onClick={() => setColors({ ...colors, [c.value]: !active })}
+                        aria-label={c.label}
+                        aria-pressed={active}
+                        style={{
+                          width: "44px",
+                          height: "44px",
+                          padding: 0,
+                          background: "transparent",
+                          border: "none",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <span
+                          aria-hidden
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "50%",
+                            background: c.value === "estampado" ? "linear-gradient(135deg,#C7B299,#7d7d7d,#0a0a0a)" : c.hex,
+                            border: active ? "2px solid var(--color-fg)" : "1px solid rgba(0,0,0,0.2)",
+                            outline: active ? "2px solid #fff" : "none",
+                            outlineOffset: active ? "-5px" : 0,
+                          }}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </FilterGroup>
+              <FilterGroup title="Precio">
+                {PRICE_RANGES.map((r) => (
+                  <RadioRow
+                    key={r.value}
+                    label={r.label}
+                    checked={price === r.value}
+                    onChange={() => setPrice(r.value)}
+                    name="price-mobile"
+                  />
+                ))}
+              </FilterGroup>
             </div>
 
-            <FilterGroup title="Tipo de prenda">
-              {PRODUCT_TYPES.map((t) => (
-                <CheckboxRow
-                  key={t.value}
-                  label={t.label}
-                  checked={!!types[t.value as ProductType]}
-                  onChange={(c) => setTypes({ ...types, [t.value]: c })}
-                />
-              ))}
-            </FilterGroup>
-            <FilterGroup title="Colección">
-              {PRODUCT_COLLECTIONS.map((c) => (
-                <CheckboxRow
-                  key={c.value}
-                  label={c.label}
-                  checked={!!collections[c.value as ProductCollection]}
-                  onChange={(v) => setCollections({ ...collections, [c.value]: v })}
-                />
-              ))}
-            </FilterGroup>
-            <FilterGroup title="Precio">
-              {PRICE_RANGES.map((r) => (
-                <RadioRow
-                  key={r.value}
-                  label={r.label}
-                  checked={price === r.value}
-                  onChange={() => setPrice(r.value)}
-                  name="price-mobile"
-                />
-              ))}
-            </FilterGroup>
-
-            <div style={{ display: "flex", gap: "8px", marginTop: "24px" }}>
-              <button type="button" onClick={clearAll} className="btn btn--ghost" style={{ flex: 1 }}>
+            <footer
+              style={{
+                display: "flex",
+                gap: "8px",
+                padding: "12px 20px calc(12px + env(safe-area-inset-bottom))",
+                borderTop: "1px solid var(--color-ink-20)",
+                backgroundColor: "#fff",
+              }}
+            >
+              <button
+                type="button"
+                onClick={clearAll}
+                className="btn btn--ghost"
+                style={{ flex: 1, minHeight: "52px" }}
+              >
                 Limpiar
               </button>
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(false)}
                 className="btn btn--primary"
-                style={{ flex: 1 }}
+                style={{ flex: 2, minHeight: "52px" }}
               >
-                Ver {filtered.length} producto{filtered.length === 1 ? "" : "s"}
+                Ver {filtered.length} prenda{filtered.length === 1 ? "" : "s"}
               </button>
-            </div>
+            </footer>
           </div>
         </div>
       )}

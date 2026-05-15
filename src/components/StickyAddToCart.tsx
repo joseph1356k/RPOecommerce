@@ -80,13 +80,16 @@ export default function StickyAddToCart({ product, selectedColor }: Props) {
         onClick={() => cart.add(product, { color: selectedColor ?? product.colors?.[0] })}
         className="btn btn--primary"
         style={{
-          padding: "12px 18px",
-          fontSize: "12px",
+          padding: "0 20px",
+          fontSize: "13px",
           flexShrink: 0,
           opacity: product.inStock === false ? 0.4 : 1,
+          minHeight: "48px",
+          minWidth: "120px",
         }}
+        data-event="add_to_cart"
       >
-        {product.inStock === false ? "Agotado" : "Agregar"}
+        {product.inStock === false ? "Agotado" : "Lo quiero"}
       </button>
     </div>
   );
