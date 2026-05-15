@@ -305,8 +305,10 @@ button {
   inset: 0;
   opacity: 0;
 }
-.product-card:hover .product-img { opacity: 0; }
+/* Only swap opacity when a second image is actually rendered */
+.product-card:hover:has(.product-img-2) .product-img { opacity: 0; }
 .product-card:hover .product-img-2 { opacity: 1; }
+/* Subtle zoom on hover regardless */
 .product-card:hover .product-img,
 .product-card:hover .product-img-2 { transform: scale(1.04); }
 
