@@ -7,6 +7,7 @@ import StickyAddToCart from "./StickyAddToCart";
 import CompleteYourLook from "./CompleteYourLook";
 import RecentlyViewed from "./RecentlyViewed";
 import StoreAvailability from "./StoreAvailability";
+import UrgencyBanner from "./UrgencyBanner";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
@@ -164,9 +165,12 @@ export default function ProductDetail({ product }: Props) {
               </>
             )}
           </div>
-          <p style={{ fontSize: "12px", color: "var(--color-ink-60)", margin: "0 0 24px" }}>
+          <p style={{ fontSize: "12px", color: "var(--color-ink-60)", margin: "0 0 16px" }}>
             o paga en 3 cuotas con <strong>Addi</strong> y <strong>Sistecrédito</strong>.
           </p>
+
+          {/* Urgency banner — ultimate purpose: motivate the purchase */}
+          <UrgencyBanner product={product} />
 
           {/* Story (lifestyle paragraph — Alo/Lululemon voice) */}
           {product.story && (

@@ -129,7 +129,8 @@ export default function HeroBanner() {
             fill
             style={{
               objectFit: "cover",
-              objectPosition: "center top",
+              // Landscape lookbook crops focus the body, so center works better than top
+              objectPosition: isMobile ? "center 30%" : "center",
               transform: i === current ? "scale(1.02)" : "scale(1)",
               transition: "transform 8000ms ease-out",
             }}

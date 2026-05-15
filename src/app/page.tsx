@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import HeroBanner from "@/components/HeroBanner";
 import CollectionSection from "@/components/CollectionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import VideoGallery from "@/components/VideoGallery";
 import CategoryGrid from "@/components/CategoryGrid";
 import ShopByIntent from "@/components/ShopByIntent";
 import MarqueeBanner from "@/components/MarqueeBanner";
@@ -73,10 +72,7 @@ export default function HomePage() {
         {/* 9. Comunidad */}
         <TestimonialsSection />
 
-        {/* 10. Video shoppable */}
-        <VideoGallery />
-
-        {/* 11. Confianza — pagos */}
+        {/* 10. Confianza — pagos */}
         <PaymentsBanner />
       </main>
       <Footer />

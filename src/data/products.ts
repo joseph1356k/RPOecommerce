@@ -29,10 +29,10 @@ export const ALL_PRODUCTS: Product[] = [
     type: "enterizos",
     collection: "esencia",
     colors: ["negro", "nude"],
-    tags: ["best-seller"],
+    tags: ["best-seller", "ultimas-unidades"],
     benefitsCopy: "Soporte suave y largo favorecedor para entrenar, salir o uso diario.",
     inStock: true,
-    intent: ["diario", "estilizada", "look-completo"],
+    intent: ["diario", "estilizada", "look-completo", "comodidad"],
     story:
       "El Enterizo Largo H se diseñó para esa mujer que quiere una sola pieza que la acompañe todo el día. Tela sedosa al tacto, soporte interno suave y horma alta que moldea cintura y caderas sin apretar. Ideal para entrenamientos de baja a media intensidad, pilates, yoga o un día de movimiento constante.",
     features: [
@@ -71,7 +71,8 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ["negro"],
     benefitsCopy: "Tejido de compresión suave que moldea sin apretar.",
     inStock: true,
-    intent: ["diario", "estilizada"],
+    tags: ["best-seller"],
+    intent: ["diario", "estilizada", "viajar"],
     story:
       "Alíe es para esa mujer que quiere sentirse sostenida sin restricciones. Compresión suave que abraza sin marcar, escote en V que estiliza el torso y largo perfecto para usarlo solo o con un buzo encima.",
     features: [
@@ -105,10 +106,10 @@ export const ALL_PRODUCTS: Product[] = [
     type: "sets",
     collection: "esencia",
     colors: ["nude"],
-    tags: ["novedad"],
+    tags: ["novedad", "best-seller"],
     benefitsCopy: "Conjunto top + legging que combina en cualquier rutina.",
     inStock: true,
-    intent: ["entrenar", "look-completo"],
+    intent: ["entrenar", "look-completo", "diario"],
     story:
       "El conjunto Rossy es la respuesta a la mujer que quiere salir de la casa lista. Misma tela, misma horma, mismo soporte: top y legging diseñados para verse perfectos juntos pero también combinables con tus básicos negros.",
     features: [
@@ -142,7 +143,8 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ["negro", "gris"],
     benefitsCopy: "Elasticidad multidireccional para alta movilidad.",
     inStock: true,
-    intent: ["entrenar", "viajar"],
+    tags: ["best-seller"],
+    intent: ["entrenar", "viajar", "comodidad"],
     story:
       "Movee se hizo para mujeres que entrenan fuerte: HIIT, funcional, baile, escalada. Elasticidad 4-way real, secado rápido y costuras planas que no se mueven cuando tú sí lo haces.",
     features: [
@@ -175,10 +177,10 @@ export const ALL_PRODUCTS: Product[] = [
     type: "enterizos",
     collection: "esencia",
     colors: ["negro"],
-    tags: ["best-seller"],
+    tags: ["best-seller", "novedad"],
     benefitsCopy: "Pieza versátil: del entrenamiento al café sin cambiarte.",
     inStock: true,
-    intent: ["diario", "viajar"],
+    intent: ["diario", "viajar", "look-completo"],
     story:
       "El Esencia Largo es la pieza versátil de la colección. Soporte para moverte, horma para sentirte estilizada y silueta limpia que se ve igual de bien con tenis o sandalias planas. Tu nuevo básico.",
     features: [
@@ -211,7 +213,8 @@ export const ALL_PRODUCTS: Product[] = [
     collection: "esencia",
     colors: ["nude", "negro"],
     inStock: false,
-    intent: ["comodidad"],
+    tags: ["ultimas-unidades"],
+    intent: ["comodidad", "diario"],
     story:
       "Ray es para los días en que solo quieres estar cómoda sin renunciar al estilo. Tela suavísima, sin costuras agresivas, escote redondo y silueta relajada. Pensado para descansar, hacer mandados o hacer yoga restaurativo.",
     features: [
@@ -241,6 +244,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ["negro"],
     benefitsCopy: "Pretina ancha + ajuste seguro. Sin ride-up.",
     inStock: true,
+    tags: ["best-seller"],
     intent: ["entrenar", "comodidad"],
     story:
       "El short más pedido por nuestra comunidad. Pretina ancha que no se enrolla, largo medio muslo y tela respirable para días calientes o sesiones intensas.",
@@ -273,7 +277,8 @@ export const ALL_PRODUCTS: Product[] = [
     collection: "esencia",
     colors: ["nude", "negro"],
     inStock: true,
-    intent: ["entrenar", "comodidad"],
+    tags: ["novedad"],
+    intent: ["entrenar", "comodidad", "diario"],
     story:
       "Top básico que no falla. Banda ancha bajo el busto que sostiene de verdad, espalda con sisas favorecedoras y tela suave que respira.",
     features: [
@@ -303,10 +308,10 @@ export const ALL_PRODUCTS: Product[] = [
     type: "enterizos",
     collection: "prisma",
     colors: ["estampado"],
-    tags: ["novedad"],
+    tags: ["novedad", "ultimas-unidades"],
     benefitsCopy: "Corto, fresco y favorecedor — pensado para verano.",
     inStock: true,
-    intent: ["viajar", "estilizada"],
+    intent: ["viajar", "estilizada", "diario"],
     story:
       "Bali es la pieza statement de Prisma. Estampado exclusivo, corte corto que estiliza pierna y silueta favorecedora. Para mujeres que quieren un look completo en una sola pieza.",
     features: [
@@ -335,7 +340,8 @@ export const ALL_PRODUCTS: Product[] = [
     collection: "prisma",
     colors: ["estampado"],
     inStock: true,
-    intent: ["viajar", "estilizada"],
+    tags: ["novedad"],
+    intent: ["viajar", "estilizada", "diario"],
     story:
       "Paris es la versión más sutil del corto. Estampado discreto, escote en V y largo justo. Combina con tenis blancos y un blazer beige para un look effortless premium.",
     features: [
@@ -365,7 +371,8 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ["negro"],
     benefitsCopy: "Soporte de alta compresión y bolsillo lateral funcional.",
     inStock: true,
-    intent: ["entrenar"],
+    tags: ["best-seller"],
+    intent: ["entrenar", "diario"],
     story:
       "Aline es el legging para mujeres que no se conforman con poco. Compresión real (no marketing), pretina alta que sostiene abdomen, bolsillo lateral para tu celular y tela 100% opaca incluso en sentadilla profunda.",
     features: [
@@ -399,9 +406,9 @@ export const ALL_PRODUCTS: Product[] = [
     type: "tops",
     collection: "prisma",
     colors: ["nude"],
-    tags: ["oferta", "ultimas-unidades"],
+    tags: ["oferta", "ultimas-unidades", "best-seller"],
     inStock: true,
-    intent: ["entrenar", "comodidad"],
+    intent: ["entrenar", "comodidad", "diario"],
     story:
       "Top con banda ancha, copas removibles y sujeción de verdad. A este precio, es una locura no probarlo. Últimas unidades.",
     features: [
@@ -433,7 +440,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ["beige"],
     tags: ["oferta"],
     inStock: true,
-    intent: ["comodidad", "viajar"],
+    intent: ["comodidad", "viajar", "diario", "estilizada", "look-completo"],
     story:
       "Valet es ese buzo que te pones encima de todo. Oversize sin verse desordenado, cuello redondo, mangas largas con puño elástico. El compañero perfecto para viajes, salidas frescas o looks layered.",
     features: [
@@ -465,7 +472,7 @@ export const ALL_PRODUCTS: Product[] = [
     colors: ["negro"],
     tags: ["oferta", "ultimas-unidades"],
     inStock: true,
-    intent: ["entrenar"],
+    intent: ["entrenar", "diario"],
     story:
       "Pantaloneta de corte holgado tipo running. Largo medio muslo, short interno integrado y tela ultra ligera. Para correr, hacer cardio o entrenar al aire libre.",
     features: [
@@ -495,9 +502,9 @@ export const ALL_PRODUCTS: Product[] = [
     type: "leggins",
     collection: "prisma",
     colors: ["negro"],
-    tags: ["oferta"],
+    tags: ["oferta", "best-seller"],
     inStock: true,
-    intent: ["entrenar", "diario"],
+    intent: ["entrenar", "diario", "comodidad"],
     story:
       "Inspirado en danza moderna. Tela hiper-flexible, costuras planas y pretina media-alta cómoda. Pensado para clases de ballet fitness, yoga, pilates y caminatas largas.",
     features: [
@@ -525,9 +532,9 @@ export const ALL_PRODUCTS: Product[] = [
     type: "tops",
     collection: "prisma",
     colors: ["gris"],
-    tags: ["novedad"],
+    tags: ["novedad", "best-seller"],
     inStock: true,
-    intent: ["entrenar", "estilizada"],
+    intent: ["entrenar", "estilizada", "look-completo"],
     story:
       "Flux es el top que se ve tan bien que te lo pondrás incluso fuera del gym. Espalda nadadora estilizada, sujeción media-alta para entrenar y tela técnica que respira en sesiones largas.",
     features: [
