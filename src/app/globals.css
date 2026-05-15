@@ -371,6 +371,10 @@ button {
   .pdp-gallery-wrap { position: static !important; }
   .product-gallery { grid-template-columns: 1fr !important; }
   .gallery-thumbs { flex-direction: row !important; overflow-x: auto !important; }
+  .club-hero-grid { grid-template-columns: 1fr !important; }
+  .calc-grid { grid-template-columns: 1fr !important; }
+  .community-grid { grid-template-columns: 1fr !important; }
+  .tier-grid { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 480px) {
   .footer-grid { grid-template-columns: 1fr !important; }
